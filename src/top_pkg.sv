@@ -23,7 +23,9 @@
 //  Package: top_pkg
 //
 package top_pkg;
-    // size??
+    
+
+
     localparam int TL_AW            = 32;
     localparam int TL_DW            = 32;    // = TL_DBW * 8; TL_DBW must be a power-of-two //  should it be a const or?
     localparam int TL_AIW           = 8;    // a_source, d_source
@@ -33,9 +35,9 @@ package top_pkg;
     localparam int TL_DBW           = (TL_DW>>3);
     localparam int TL_SZW           = $clog2($clog2(TL_DBW)+1);
     
-    localparam IOPMPRegions           = 6;
-    localparam IOPMPMemoryDomains     = 3; 
-    localparam NUM_MASTERS            = 3;
+    // localparam IOPMPRegions           = 6;
+    // localparam IOPMPMemoryDomains     = 3; 
+    // localparam NUM_MASTERS            = 3;
     
     typedef enum logic [1:0] {
         IDLE              = 2'b00,

@@ -27,13 +27,13 @@ import iopmp_pkg::*;
 module iopmp_req_handler_tlul #(
     parameter int unsigned IOPMPNumChan              =   2
 )(
-    input   logic             clk,
-    input   logic             rst,
-    input   tl_h2d_t          mst_req_i[IOPMPNumChan],
-    output  tl_d2h_t          mst_rsp_o[IOPMPNumChan], 
+    input   logic                           clk,
+    input   logic                           rst,
+    input   tl_h2d_t                        mst_req_i[IOPMPNumChan],
+    output  tl_d2h_t                        mst_rsp_o[IOPMPNumChan], 
     
-    input   tl_d2h_t          slv_rsp_i[IOPMPNumChan],
-    output  tl_h2d_t          slv_req_o[IOPMPNumChan],
+    input   tl_d2h_t                        slv_rsp_i[IOPMPNumChan],
+    output  tl_h2d_t                        slv_req_o[IOPMPNumChan],
     input logic                             iopmp_permission_denied[IOPMPNumChan],
     input iopmp_pkg::err_cfg                ERR_CFG,
     
@@ -63,14 +63,13 @@ module iopmp_req_handler_tlul #(
     logic                                slv_ready [IOPMPNumChan];
 
     logic                                slv_rsp_pending;
-    tl_d2h_t                             slv_rsp_i_s[IOPMPNumChan];
     tl_d2h_t                             err_tl_rsp[IOPMPNumChan];
     tl_d2h_t                             success_tl_rsp[IOPMPNumChan];
     //tl_d2h_t                             slv_tl_rsp[IOPMPNumChan];
     // end
 
-    tl_h2d_t req_i[IOPMPNumChan];
-    tl_d2h_t rsp_o[IOPMPNumChan];
+    // tl_h2d_t req_i[IOPMPNumChan];
+    // tl_d2h_t rsp_o[IOPMPNumChan];
 
     //assign req_i    = mst_req_i;
     //assign rsp_o    = slv_rsp_o;
@@ -83,12 +82,12 @@ module iopmp_req_handler_tlul #(
         assign mst_addr[i]             = mst_req_i[i].a_address;
         assign mst_ready[i]            = mst_req_i[i].d_ready;
         assign mst_opcode[i]           = mst_req_i[i].a_opcode;
-        assign mst_id[i]               = i; //mst_req_i[i].a_source; // casting?
+        assign mst_id[i]               = i; //mst_req_i[i].a_source;
         
-        assign slv_valid[i]            = slv_rsp_i_s[i].d_valid;
-        assign slv_ready[i]            = slv_rsp_i_s[i].a_ready;
-        assign slv_opcode[i]           = slv_rsp_i_s[i].d_opcode;
-        assign slv_sink[i]             = slv_rsp_i_s[i].d_sink;  
+        assign slv_valid[i]            = slv_rsp_i[i].d_valid;
+        assign slv_ready[i]            = slv_rsp_i[i].a_ready;
+        assign slv_opcode[i]           = slv_rsp_i[i].d_opcode;
+        assign slv_sink[i]             = slv_rsp_i[i].d_sink;  
         
         assign iopmp_check_addr_o[i]   = iopmp_check_addr[i];
         assign iopmp_check_access_o[i] = iopmp_check_access[i];
@@ -102,13 +101,10 @@ module iopmp_req_handler_tlul #(
         always_ff @(posedge clk) begin
             if (rst) begin
                 current_state      <= IDLE;
-                slv_rsp_i_s[j]     <= slv_rsp_i[j];
+                slv_rsp_pending    <= 0;
             end
             else begin
                 current_state <= next_state; 
-                if(!slv_rsp_pending) begin 
-                    slv_rsp_i_s[j]     <= slv_rsp_i[j];
-                end
             end
         end
 
@@ -121,8 +117,9 @@ module iopmp_req_handler_tlul #(
                         next_state            = BLOCK;
                         iopmp_check_addr[j]   = mst_addr[j];
                         iopmp_check_access[j] = (mst_opcode[j] == PutFullData || mst_opcode[j] == PutPartialData) ? IOPMP_ACC_WRITE : IOPMP_ACC_READ; // ?????? 
-                        if(slv_ready[j] && !iopmp_permission_denied[j]) begin // how do we know when the result will be here????(consider mdcfg)
-                            slv_req_o = mst_req_i; // I think this should be in the next state, // check this part!!!!!!!!!!
+                        // slv_ready[j] && removed from if
+                        if(!iopmp_permission_denied[j]) begin // how do we know when the result will be here????(consider mdcfg)
+                            slv_req_o[j] = mst_req_i[j]; // I think this should be in the next state, // check this part!!!!!!!!!!
                         end
                     end 
                     else begin
@@ -131,8 +128,8 @@ module iopmp_req_handler_tlul #(
                 end       
                 BLOCK: begin
                         if(iopmp_permission_denied[j]) begin 
-                            if(mst_ready[j]) begin
-                                if(ERR_CFG.rre && success_tl_rsp[j] == AccessAckData || (ERR_CFG.rwe && success_tl_rsp[j] == AccessAck)) begin
+                            if(mst_ready[j]) begin // if response was already generated between err_rsp_gen and mst, do I need this?
+                                if(ERR_CFG.rre && success_tl_rsp[j].d_opcode == AccessAckData || (ERR_CFG.rwe && success_tl_rsp[j].d_opcode == AccessAck)) begin
                                     mst_rsp_o[j] = success_tl_rsp[j];
                                 end
                                 else begin
@@ -145,8 +142,8 @@ module iopmp_req_handler_tlul #(
                             end
                         end
                         else begin
-                            if(mst_ready[j] && slv_valid[j]) begin 
-                                mst_rsp_o[j]    = slv_rsp_i_s[j];
+                            if(mst_ready[j] && slv_valid[j]) begin // if response was already generated between slv_rsp_gen and mst, do I need this?
+                                mst_rsp_o[j]    = slv_rsp_i[j];
                                 slv_rsp_pending = 0;
                                 next_state      = IDLE;
                                 //slv_ready[j]   = 1'b1;

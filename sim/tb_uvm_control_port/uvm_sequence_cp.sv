@@ -8,7 +8,7 @@ class uvm_sequence_cp extends uvm_sequence#(uvm_transaction_cp);
     //  Group: Variables
     uvm_transaction_cp              tr;
 
-    int i = 0;
+    int j = 0;
 
     //  Constructor: new
     function new(string name = "uvm_sequence_cp");
@@ -20,8 +20,8 @@ class uvm_sequence_cp extends uvm_sequence#(uvm_transaction_cp);
     virtual task body();
         repeat(1)
             begin 
-                `uvm_info("TR", $sformatf("WRITE TRANSACTION %0d", i), UVM_NONE);
-                i = i + 1;
+                `uvm_info("TR", $sformatf("TRANSACTION %0d", j), UVM_NONE);
+                j = j + 1;
                 tr = uvm_transaction_cp::type_id::create("tr");
                 start_item(tr);
                 assert(tr.randomize);

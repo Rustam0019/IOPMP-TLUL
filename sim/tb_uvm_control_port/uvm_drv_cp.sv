@@ -18,7 +18,6 @@ class uvm_drv_cp extends uvm_driver#(uvm_transaction_cp);
         tr = uvm_transaction_cp::type_id::create("tr");   
         if(!uvm_config_db#(virtual intf_cp)::get(this,"","vif",vif))//uvm_test_top.env.agent.drv.aif
           `uvm_error("DRV","Cannot get Virtual Control Port Interface from TOP");
-        //`uvm_info("DRV", $sformatf("Configuration datax16 accessed"), UVM_MEDIUM);
         
         super.build_phase(phase);        
 
@@ -28,7 +27,7 @@ class uvm_drv_cp extends uvm_driver#(uvm_transaction_cp);
     task reset_dut();
         begin
             vif.reset = 0;
-            #200ns;
+            #150ns;
             vif.reset = 1;
             vif.tb_wr = 0;
             vif.tb_rd = 0;
@@ -67,7 +66,7 @@ class uvm_drv_cp extends uvm_driver#(uvm_transaction_cp);
             // end
         end 
 
-        for(integer j = 0; j < IOPMPRegions; j++) begin
+        for(integer j = 0; j < cp_file_pkg::IOPMPRegions; j++) begin
             if(addr == (ENTRY_OFFSET + j * 16)) begin 
                 ENTRY_ADDR_I_OFFSET = ENTRY_OFFSET + j * 16;
                 indx                = j;
@@ -85,14 +84,20 @@ class uvm_drv_cp extends uvm_driver#(uvm_transaction_cp);
 
         case (addr)
             HWCFG0_OFFSET: begin
-                w_data      = '0;
+                w_data      = '1;
                 w_data[31]  = tr.enable;
                 w_data[9]   = tr.rrid_transl_prog;
                 w_data[7]   = tr.prient_prog;
             end
+            HWCFG1_OFFSET: begin
+                w_data      = '1;
+            end
             HWCFG2_OFFSET: begin
                 w_data        = '0;
                 w_data[15:0]  = tr.prio_entry;
+            end
+            ENTRY_OFFSET_OFFSET: begin
+                w_data = $urandom();
             end
             MDCFGLCK_OFFSET: begin
                 w_data              = '0;
@@ -186,21 +191,25 @@ class uvm_drv_cp extends uvm_driver#(uvm_transaction_cp);
 
         forever begin
             seq_item_port.get_next_item(tr);
-            if (tr.op == write_reg) begin
+            if (tr.op_tr == write_reg) begin
                 //vif.tb_rd = 1;
                 iopmp_reg_write(HWCFG0_OFFSET);
                 vif.tb_wr = 1;
                 iopmp_reg_read(HWCFG0_OFFSET);
 
                 // //vif.tb_rd = 1; // remember
-                // //iopmp_reg_write(HWCFG0_OFFSET);
-                // iopmp_reg_read(HWCFG0_OFFSET);
-                // vif.tb_wr = 1;
+                iopmp_reg_write(HWCFG1_OFFSET);
+                vif.tb_wr = 1;
+                iopmp_reg_read(HWCFG1_OFFSET);
                 // //vif.tb_rd = 1;
 
                 iopmp_reg_write(HWCFG2_OFFSET);
                 vif.tb_wr = 1;
                 iopmp_reg_read(HWCFG2_OFFSET);
+
+                iopmp_reg_write(ENTRY_OFFSET_OFFSET);
+                vif.tb_wr = 1;
+                iopmp_reg_read(ENTRY_OFFSET_OFFSET);
 
                 iopmp_reg_write(MDCFGLCK_OFFSET);
                 vif.tb_wr = 1;

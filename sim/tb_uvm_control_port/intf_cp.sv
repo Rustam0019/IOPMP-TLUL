@@ -13,10 +13,10 @@ interface intf_cp();
     error_registers_t                        error_report_i;
     error_registers_t                        error_report_o;
     
-    iopmp_pkg::entry_cfg                    entry_conf_table  [IOPMPRegions];
-    logic [33:0]                            entry_addr_table  [IOPMPRegions];
-    logic [15:0]                            mdcfg_table       [IOPMPMemoryDomains];
-    logic [31:0]                            srcmd_en_table    [NUM_MASTERS];
+    iopmp_pkg::entry_cfg                    entry_conf_table  [cp_file_pkg::IOPMPRegions];
+    logic [33:0]                            entry_addr_table  [cp_file_pkg::IOPMPRegions];
+    logic [15:0]                            mdcfg_table       [cp_file_pkg::IOPMPMemoryDomains];
+    logic [31:0]                            srcmd_en_table    [cp_file_pkg::NUM_MASTERS];
     logic [15:0]                            prio_entry_num;
 
     logic                                   tb_wr;

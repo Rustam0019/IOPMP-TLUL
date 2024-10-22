@@ -97,6 +97,8 @@ module tb_top;
                                     input logic   [top_pkg::TL_DW-1:0]  w_data,
                                     input int     indx        
                                      );
+        tl_i_req[indx].a_valid          <= 1'b0;
+        #100;
         tl_i_req[indx].a_param          <= '0;
         tl_i_req[indx].a_size           <= 2'b10;
         tl_i_req[indx].a_source         <= ID;
@@ -108,6 +110,7 @@ module tb_top;
         tl_i_req[indx].a_data           <= w_data;
         #100;
         tl_i_req[indx].a_valid          <= 1'b0;
+        #100;
     endtask; 
     
         

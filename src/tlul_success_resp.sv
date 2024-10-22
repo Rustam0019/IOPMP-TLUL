@@ -55,9 +55,9 @@ assign rsp_o.a_ready  = ~rsp_pending;
 assign rsp_o.d_valid  = rsp_pending;
 
 assign rsp_o.d_source = rsp_source;
-assign rsp_o.d_sink   = '0;
+assign rsp_o.d_sink   = 8'hAA;
 assign rsp_o.d_param  = '0;
-assign rsp_o.d_size   = '0;
+assign rsp_o.d_size   = 2'b10;
 assign rsp_o.d_opcode = (rsp_opcode == Get) ? AccessAckData : AccessAck;
 assign rsp_o.d_data   = '1;
 assign rsp_o.d_error  = 1'b0; // for success????

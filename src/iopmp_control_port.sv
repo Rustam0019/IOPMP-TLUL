@@ -18,6 +18,7 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
+`include "my_macros.svh"
 import top_pkg::*;
 import tlul_pkg::*;
 import config_pkg::*;
@@ -280,10 +281,10 @@ assign VERSION.specver = 8'h0;
 assign IMPLEMENTATION.impid  = '1;
 
 // hwcfg0 register
-assign HWCFG0.model             =           FULL_MODEL;
-assign HWCFG0.tor_en            =           1'h1;
-assign HWCFG0.sps_en            =           1'h0; // not yet
-assign HWCFG0.user_cfg_en       =           1'h0;
+assign HWCFG0.model             =           `FULL_MODEL_M;
+assign HWCFG0.tor_en            =           `HW_ONE;
+assign HWCFG0.sps_en            =           `HW_ZERO; // not yet
+assign HWCFG0.user_cfg_en       =           `HW_ZERO;
 
 iopmp_reg_handler #(
   .DataWidth(1),
@@ -299,16 +300,16 @@ iopmp_reg_handler #(
   .q(HWCFG0.prient_prog)
 );
 
-assign HWCFG0.rrid_transl_en            = 1'h0;
-assign HWCFG0.rrid_transl_prog          = 1'h0;
-assign HWCFG0.chk_x                     = 1'h0;
-assign HWCFG0.no_x                      = 1'h0;
-assign HWCFG0.no_w                      = 1'h0;
-assign HWCFG0.stall_en                  = 1'h0;
-assign HWCFG0.peis                      = 1'h0; // can be changed, check the datasheet
-assign HWCFG0.pees                      = 1'h0;
-assign HWCFG0.mfr_en                    = 1'h0;
-assign HWCFG0.rsv                       = '0;
+assign HWCFG0.rrid_transl_en            = `HW_ZERO;
+assign HWCFG0.rrid_transl_prog          = `HW_ZERO;
+assign HWCFG0.chk_x                     = `HW_ZERO;
+assign HWCFG0.no_x                      = `HW_ZERO;
+assign HWCFG0.no_w                      = `HW_ZERO;
+assign HWCFG0.stall_en                  = `HW_ZERO;
+assign HWCFG0.peis                      = `HW_ZERO; // can be changed, check the datasheet
+assign HWCFG0.pees                      = `HW_ZERO;
+assign HWCFG0.mfr_en                    = `HW_ZERO;
+assign HWCFG0.rsv                       = {8{`HW_ZERO}};
 assign HWCFG0.md_num                    = IOPMPMemoryDomains;
 
 iopmp_reg_handler #(
@@ -391,7 +392,7 @@ iopmp_reg_handler #(
   .q(MDCFGLCK.f)
 );
 
-assign MDCFGLCK.rsv = '0;
+assign MDCFGLCK.rsv = `HW_ZERO;
 
 iopmp_reg_handler #(
   .DataWidth(1),
@@ -421,7 +422,7 @@ iopmp_reg_handler #(
   .q(ENTRYLCK.f)
 );
 
-assign ENTRYLCK.rsv = '0;
+assign ENTRYLCK.rsv = `HW_ZERO;
 
 
 // Entry_offset register
@@ -553,7 +554,7 @@ iopmp_reg_handler #(
   .q(ERR_CFG.rxe)
 );
 
-assign ERR_CFG.rsv = '0;
+assign ERR_CFG.rsv = `HW_ZERO;
 
 
 
@@ -587,7 +588,7 @@ iopmp_reg_handler #(
   .q(ERR_REQINFO.ttype)
 );
 
-assign ERR_REQINFO.rsv1 = '0;
+assign ERR_REQINFO.rsv1 = `HW_ZERO;
 
 iopmp_reg_handler #(
   .DataWidth(1),
@@ -620,7 +621,7 @@ iopmp_reg_handler #(
 );
 
 
-assign ERR_REQINFO.rsv2 = '0;
+assign ERR_REQINFO.rsv2 = `HW_ZERO;
 
 // Err_ReqAddr register
 iopmp_reg_handler #(
@@ -709,7 +710,7 @@ for(genvar i = 0; i < IOPMPMemoryDomains; i++) begin
     );
     
     //assign MDCFG[0].t = IOPMPRegions / 2; // for now for compact-k model
-    assign MDCFG[i].rsv = '0;
+    assign MDCFG[i].rsv = `HW_ZERO;
 end
 
 for(genvar i = 0; i < NUM_MASTERS; i++) begin 
@@ -860,8 +861,8 @@ always_comb begin
     err_cfg_rwe_we                          = '0;
     err_cfg_rxe_we                          = '0;
     err_reqinfo_v_we                        = '0;
-    slv_valid                        = 0;
-                slv_ready                        = 1;
+    slv_valid                               =  0;
+    slv_ready                               =  1;
     for(integer j = 0; j < IOPMPMemoryDomains; j++) begin
         mdcfg_t_we [j] = '0;
     end
@@ -1020,9 +1021,9 @@ always_comb begin
                                 entry_cfg_data_in[indx][31:11] = '0;
                             end
                         end
-            //            default: begin
-            //                entrylck_f_we = '0; 
-            //            end
+                        default: begin
+                            reg_error_d                      = 1; 
+                        end
                     endcase      
                 end
                 if(reg_rd_enable) begin
@@ -1122,6 +1123,9 @@ always_comb begin
                 //        end
                         ENTRY_CFG_I_OFFSET: begin
                             reg_rr_data_d[31:0] = entry_conf_table[indx][10:0];
+                        end
+                        default: begin
+                          reg_error_d                      = 1; 
                         end
                     endcase
                 end

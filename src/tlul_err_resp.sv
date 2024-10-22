@@ -34,18 +34,22 @@ module tlul_err_resp (
   always_ff @(posedge clk_i or negedge rst_ni) begin
     if (!rst_ni) begin
       err_rsp_pending <= 1'b0;
-      err_source      <= {top_pkg::TL_AIW{1'b0}};
+      err_source      <= {top_pkg::TL_AIW{1'b1}};
       err_opcode      <= Get;
       err_size        <= '0;
       //err_instr_type  <= MuBi4False;
-    end else if (err_rsp_pending && tl_h_i.d_ready) begin
-      err_rsp_pending <= 1'b0;
-    end else if (tl_h_i.a_valid && tl_h_o_int.a_ready) begin
-      err_rsp_pending <= 1'b1;
-      err_source      <= tl_h_i.a_source;
-      err_opcode      <= tl_h_i.a_opcode;
-      err_size        <= tl_h_i.a_size;
-      //err_instr_type  <= tl_h_i.a_user.instr_type;
+    end 
+    else begin 
+      if (err_rsp_pending && tl_h_i.d_ready) begin
+        err_rsp_pending <= 1'b0;
+      end 
+      else if (tl_h_i.a_valid && tl_h_o_int.a_ready) begin
+        err_rsp_pending <= 1'b1;
+        err_source      <= tl_h_i.a_source;
+        err_opcode      <= tl_h_i.a_opcode;
+        err_size        <= tl_h_i.a_size;
+        //err_instr_type  <= tl_h_i.a_user.instr_type;
+      end
     end
   end
 
@@ -55,7 +59,7 @@ module tlul_err_resp (
  //                                                                         DataWhenError;
   assign tl_h_o_int.d_source = err_source;
   assign tl_h_o_int.d_data   = '0;
-  assign tl_h_o_int.d_sink   = '0;
+  assign tl_h_o_int.d_sink   = 8'hEE;
   assign tl_h_o_int.d_param  = '0;
   assign tl_h_o_int.d_size   = err_size;
   assign tl_h_o_int.d_opcode = (err_opcode == Get) ? AccessAckData : AccessAck;

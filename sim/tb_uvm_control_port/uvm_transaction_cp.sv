@@ -105,22 +105,22 @@ class uvm_transaction_cp extends uvm_sequence_item;
             // }
         }
     }
-    logic [0:0] srcmd_en_l[NUM_MASTERS];
+    logic [0:0] srcmd_en_l[cp_file_pkg::NUM_MASTERS];
 
 //    // Register SRCMD_ENH
 //    rand logic [31:0] srcmd_enh_mdh[NUM_MASTERS];
 
    // Register ENTRY_CFG
-   rand logic entry_cfg_sexe[IOPMPRegions];                 // Supress the (bus) error on an illegal instruction fetch caught by the entry
-   rand logic entry_cfg_sewe[IOPMPRegions];                 // Supress the (bus) error on an illegal write access caught by the entry
-   rand logic entry_cfg_sere[IOPMPRegions];                 // Supress the (bus) error on an illegal read access caught by the entry
-   rand logic entry_cfg_sixe[IOPMPRegions];                 // Suppress interrupt on an illegal instruction fetch caught by the entry
-   rand logic entry_cfg_siwe[IOPMPRegions];                 // Suppress interrupt for write violations caught by the entry
-   rand logic entry_cfg_sire[IOPMPRegions];                 // To suppress interrupt for an illegal read access caught by the entry
-   rand iopmp_cfg_mode_addr entry_cfg_a[IOPMPRegions];      // The address mode of the IOPMP entry
-   rand logic entry_cfg_x[IOPMPRegions];                    // The instruction fetch permission to the protected memory region
-   rand logic entry_cfg_w[IOPMPRegions];                    // The write permission to the protected memory region
-   rand logic entry_cfg_r[IOPMPRegions];                    // The read permission to protected memory region
+   rand logic entry_cfg_sexe[cp_file_pkg::IOPMPRegions];                 // Supress the (bus) error on an illegal instruction fetch caught by the entry
+   rand logic entry_cfg_sewe[cp_file_pkg::IOPMPRegions];                 // Supress the (bus) error on an illegal write access caught by the entry
+   rand logic entry_cfg_sere[cp_file_pkg::IOPMPRegions];                 // Supress the (bus) error on an illegal read access caught by the entry
+   rand logic entry_cfg_sixe[cp_file_pkg::IOPMPRegions];                 // Suppress interrupt on an illegal instruction fetch caught by the entry
+   rand logic entry_cfg_siwe[cp_file_pkg::IOPMPRegions];                 // Suppress interrupt for write violations caught by the entry
+   rand logic entry_cfg_sire[cp_file_pkg::IOPMPRegions];                 // To suppress interrupt for an illegal read access caught by the entry
+   rand iopmp_cfg_mode_addr entry_cfg_a[cp_file_pkg::IOPMPRegions];      // The address mode of the IOPMP entry
+   rand logic entry_cfg_x[cp_file_pkg::IOPMPRegions];                    // The instruction fetch permission to the protected memory region
+   rand logic entry_cfg_w[cp_file_pkg::IOPMPRegions];                    // The write permission to the protected memory region
+   rand logic entry_cfg_r[cp_file_pkg::IOPMPRegions];                    // The read permission to protected memory region
 
 
    // Register ENTRY_ADDR
