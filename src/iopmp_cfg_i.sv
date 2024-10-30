@@ -1,7 +1,8 @@
 // Copyright lowRISC contributors.
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
-// This code is derived from the ibex_pmp.sv file from opentitan project.
+// This code is derived from the ibex_pmp.sv file from opentitan project and adapted to the IOPMP.
+// Description: IOPMP checker asserts the iopmp_req_err_o signal when the master has no access permission to an address.
 
 import top_pkg::*;
 import tlul_pkg::*;
@@ -13,7 +14,6 @@ module iopmp_cfg_i #(
     parameter int unsigned IOPMPRegions      =   0,
     parameter int unsigned IOPMPNumChan      =   2
     //parameter int unsigned IOPMPPrioRegions  =   1
-    //parameter int unsigned RegWidth          =   0
 ) (
     input logic clk,
     input logic rst,
@@ -35,15 +35,7 @@ module iopmp_cfg_i #(
 // Access Checking Signals
 logic [33:0]                                                  region_start_addr [IOPMPRegions];
 logic [33:IOPMPGranularity+2]                                 region_addr_mask  [IOPMPRegions];
-//logic [IOPMPNumChan-1:0][IOPMPRegions-1:0]                    region_match_gt;
-//logic [IOPMPNumChan-1:0][IOPMPRegions-1:0]                    region_match_lt;
-//logic [IOPMPNumChan-1:0][IOPMPRegions-1:0]                    region_match_eq;
-//logic [IOPMPNumChan-1:0][IOPMPRegions-1:0]                    region_match_all;
-//logic [IOPMPNumChan-1:0][IOPMPRegions-1:0]                    region_basic_perm_check;
-// logic [IOPMPNumChan-1:0][IOPMPRegions-1:0]                    region_perm_check;
 
-
-//logic [7:0]                                                   count_test[IOPMPNumChan];
 
 logic [IOPMPNumChan-1:0][IOPMPRegions-1:0]                                      region_match_gt_j;
 logic [IOPMPNumChan-1:0][IOPMPRegions-1:0]                                      region_match_lt_j;

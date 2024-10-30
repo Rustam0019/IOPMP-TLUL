@@ -8,7 +8,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: 
+// Description: This module handles the requests coming from masters and depending on the IOPMP result, request is forwarded to a slave.
 // 
 // Dependencies: 
 // 

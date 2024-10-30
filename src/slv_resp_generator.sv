@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: 
+// Description: Dummy slave response generator.
 // 
 // Dependencies: 
 // 

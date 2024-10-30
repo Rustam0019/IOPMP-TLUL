@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: 
+// Description:  This module is used to program the IOPMP registers. 
 // 
 // Dependencies: 
 // 

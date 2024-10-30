@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: 
+// Description: This module records the first error occurred in the system and stores error data in the IOPMP Error registers.
 // 
 // Dependencies: 
 // 

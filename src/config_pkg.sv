@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: 
+// Description: Base addresses for the IOPMP registers.
 // 
 // Dependencies: 
 // 
@@ -24,7 +24,7 @@
 //
 package config_pkg;
     
-    localparam int N                     = 5; // parameter?
+    localparam int N                     = 5;
     localparam int AddrWidth             = 14;
     localparam int SourceWidth           = 8;
     localparam int SinkWidth             = 8;
@@ -67,7 +67,7 @@ package config_pkg;
     
     
     // mask for 4 bytes
-    localparam  logic [AddrWidth -  1: 0] ADDRESS_MASK                  =           14'h3FFC; // does not work for SRCMD (check)
+    localparam  logic [AddrWidth -  1: 0] ADDRESS_MASK                  =           14'h3FFC;
     
     
 endpackage: config_pkg

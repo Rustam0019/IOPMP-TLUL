@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: 
+// Description: Dummy successful response generator. If ERR_CFG registers signals(rwe or rre) is set, this response will be sent to a master.
 // 
 // Dependencies: 
 // 
@@ -60,6 +60,6 @@ assign rsp_o.d_param  = '0;
 assign rsp_o.d_size   = 2'b10;
 assign rsp_o.d_opcode = (rsp_opcode == Get) ? AccessAckData : AccessAck;
 assign rsp_o.d_data   = '1;
-assign rsp_o.d_error  = 1'b0; // for success????
+assign rsp_o.d_error  = 1'b0;
     
 endmodule

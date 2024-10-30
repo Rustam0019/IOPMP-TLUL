@@ -127,7 +127,8 @@ class uvm_transaction_cp extends uvm_sequence_item;
    rand logic [31:0] entry_addr_addr[cp_file_pkg::IOPMPRegions];
    constraint entry_table_c {
     foreach(entry_addr_addr[i]) {
-        entry_addr_addr[i] inside {32'h2000_0000, 32'h4000_0000, 32'h8000_0000};
+        //entry_addr_addr[i] inside {32'h2000_0000, 32'h4000_0000, 32'h8000_0000};
+        32'h2000_0000 <= entry_addr_addr[i] <= 32'h8000_0000;
         if(entry_cfg_a[i] == IOPMP_MODE_TOR){
             entry_addr_addr[i - 1] < entry_addr_addr[i];
         }

@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: 
+// Description: This module is used to handle the programming of the registers depending on their Access types. Derived from RISC-V IOPMP project by Luis Cunha.
 // 
 // Dependencies: 
 // 

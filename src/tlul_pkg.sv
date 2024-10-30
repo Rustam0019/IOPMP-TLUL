@@ -1,3 +1,5 @@
+// Description: TileLink UL structures.
+
 package tlul_pkg;
 
 //    localparam int TL_AW=32;
@@ -37,14 +39,6 @@ package tlul_pkg;
         logic                         d_ready;
         } tl_h2d_t;
 
-
-//    localparam tl_h2d_t TL_H2D_DEFAULT = '{
-//        d_ready:  1'b1,
-//        a_opcode: tl_a_op_e'('0),
-//        //a_user:   TL_A_USER_DEFAULT,
-//        a_data:   BlankedAData,
-//        default:  '0
-//        };
 
     typedef struct packed {
         logic                         d_valid;

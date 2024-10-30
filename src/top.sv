@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: 
+// Description: Top file which contains the IOPMP control port, the IOPMP array top and the request handler.
 // 
 // Dependencies: 
 // 

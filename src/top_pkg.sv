@@ -24,8 +24,6 @@
 //
 package top_pkg;
     
-
-
     localparam int TL_AW            = 32;
     localparam int TL_DW            = 32;    // = TL_DBW * 8; TL_DBW must be a power-of-two //  should it be a const or?
     localparam int TL_AIW           = 8;    // a_source, d_source

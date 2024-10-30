@@ -9,7 +9,12 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: 
+// Description: This module receives the address and its request type to check. 
+//              Memory Domains(MDs) associated with the RRID and entries associated with those MDs are extracted. 
+//              Then, extracted data is sent to the IOPMP checker.
+
+
+
 // 
 // Dependencies: 
 // 
@@ -106,7 +111,7 @@ for(genvar j = 0; j < IOPMPNumChan; j++) begin
     end
     //end
      
-     // when will it be executed? do we need a flag?
+
     iopmp_cfg_i #(
         .IOPMPGranularity(IOPMPGranularity),
         .IOPMPRegions(IOPMPRegions),
