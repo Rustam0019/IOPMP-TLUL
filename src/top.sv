@@ -28,7 +28,7 @@ module top #(
     parameter int unsigned IOPMPNumChan          =   3,
     parameter int unsigned IOPMPMemoryDomains    =   3,
     parameter int unsigned NUM_MASTERS           =   3,
-    parameter int unsigned IOPMPGranularity      =   1 // problem here, it affects TOR?????
+    parameter int unsigned IOPMPGranularity      =   1
 )(
     input  logic                clk,
     input  logic                rst,
@@ -89,7 +89,7 @@ assign ERR_CFG     = error_reg_o.ERR_CFG;
 
 
 
-iopmp_control_port #( // how can we make it secure?
+iopmp_control_port #(
     .IOPMPRegions(IOPMPRegions),
     .IOPMPMemoryDomains(IOPMPMemoryDomains),
     .NUM_MASTERS(NUM_MASTERS)
@@ -134,13 +134,11 @@ slv_resp_generator slv_resp(
         .rsp_o(slv_rsp_i[j]));       
 end
  
- // when will it be executed? do we need a flag?
 iopmp_array_top #(
     .IOPMPGranularity(IOPMPGranularity),
     .IOPMPRegions(IOPMPRegions),
     .IOPMPNumChan(IOPMPNumChan),
     .IOPMPMemoryDomains(IOPMPMemoryDomains)
-    //.IOPMPPrioRegions(prio_entry_num)
 ) iopmp_array_top_0(
     .clk(clk),
     .rst(rst),

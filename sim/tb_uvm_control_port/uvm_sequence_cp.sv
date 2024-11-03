@@ -27,7 +27,7 @@ class uvm_sequence_cp extends uvm_sequence#(uvm_transaction_cp);
                 assert(tr.randomize);
                 tr.enable               = 1;                 // Indicate if the IOPMP checks transactions by default. If it is implemented, it should be initial to 0 and sticky to 1. If it is not implemented, it should be wired to 1.
                 tr.rrid_transl_prog     = 0;                // A write-1-set bit is sticky to 0 and indicate if the field sid_transl is programmable. Support only for rrid_transl_en=1, otherwise, wired to 0.
-                tr.prient_prog          = 0;                // A write-1-clear bit is sticky to 0 and indicates if HWCFG2.prio_entry is programmable. Reset to 1 if the implementation supports programmable prio_entry, otherwise, wired to 0.
+                tr.prient_prog          = 1;                // A write-1-clear bit is sticky to 0 and indicates if HWCFG2.prio_entry is programmable. Reset to 1 if the implementation supports programmable prio_entry, otherwise, wired to 0.
      
                 // Register HWCFG2
                 //rand logic [31:16] rrid_transl; 

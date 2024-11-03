@@ -5,11 +5,12 @@ set library_file_list {
 		../../src/top_pkg.sv
 		../../src/tlul_pkg.sv
 		../../src/iopmp_pkg.sv
-		../../src/iopmp_reg_handler.sv
-		../../src/iopmp_control_port.sv
-		cp_file_pkg.sv
-		intf_cp.sv
-		uvm_top_cp.sv
+		../../src/tlul_err_resp.sv
+		../../src/tlul_success_resp.sv
+		../../src/iopmp_req_handler_tlul.sv
+		rh_file_pkg.sv
+		intf_rh.sv
+		uvm_top_rh.sv
 		}
 }
 
@@ -20,16 +21,17 @@ set fileList {
 		../../src/top_pkg.sv
 		../../src/tlul_pkg.sv
 		../../src/iopmp_pkg.sv
-		../../src/iopmp_reg_handler.sv
-		../../src/iopmp_control_port.sv
-		cp_file_pkg.sv
-		intf_cp.sv
-		uvm_top_cp.sv
+		../../src/tlul_err_resp.sv
+		../../src/tlul_success_resp.sv
+		../../src/iopmp_req_handler_tlul.sv
+		rh_file_pkg.sv
+		intf_rh.sv
+		uvm_top_rh.sv
 }
 
 
 # Define top level file
-set top_level work.uvm_top_cp
+set top_level work.uvm_top_rh
 
 
 proc AddWave {} {
@@ -73,7 +75,7 @@ foreach {library file_list} $library_file_list {
 		}
 }
 
-vlog -sv cp_file_pkg.sv
+vlog -sv rh_file_pkg.sv
 
 
 # Load the simulation +acc

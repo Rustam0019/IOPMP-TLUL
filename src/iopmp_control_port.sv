@@ -886,6 +886,7 @@ always_comb begin
                 reg_error_d                      = 0;
                 mst_size_d                       = mst_size;
                 mst_param_d                      = mst_param;
+                reg_rr_data_d                    = '0;
                 for(integer j = 0; j < IOPMPRegions; j++) begin
                     if(reg_addr == (ENTRY_OFFSET + j * 16)) begin 
                         ENTRY_ADDR_I_OFFSET = ENTRY_OFFSET + j * 16;
@@ -1068,11 +1069,13 @@ always_comb begin
                         MDCFGLCK_OFFSET: begin
                             reg_rr_data_d[0]          = MDCFGLCK.l; 
                             reg_rr_data_d[7:1]        = MDCFGLCK.f; 
+                            reg_rr_data_d[31:8]       = '0;
                             // mdcfglck_f_data_in    = later... 
                         end
                         ENTRYLCK_OFFSET: begin 
                             reg_rr_data_d[0]          = ENTRYLCK.l; 
                             reg_rr_data_d[16:1]       = ENTRYLCK.f; 
+                            reg_rr_data_d[31:17]      = '0;
                         end 
                         ERR_CFG_OFFSET: begin
                             reg_rr_data_d[0]           = ERR_CFG.l;
@@ -1083,12 +1086,14 @@ always_comb begin
                             reg_rr_data_d[5]           = ERR_CFG.rre;
                             reg_rr_data_d[6]           = ERR_CFG.rwe;
                             reg_rr_data_d[7]           = ERR_CFG.rxe;
+                            reg_rr_data_d[31:8]        = '0;
                         end
                         ERR_REQINFO_OFFSET: begin
                             reg_rr_data_d[0]           = ERR_REQINFO.v;
                             reg_rr_data_d[2:1]         = ERR_REQINFO.ttype;
                             reg_rr_data_d[6:4]         = ERR_REQINFO.etype;
                             reg_rr_data_d[7]           = ERR_REQINFO.svc;
+                            reg_rr_data_d[31:8]        = '0;
                         end
                         ERR_REQADDR_OFFSET: begin
                             reg_rr_data_d[31:0]           = ERR_REQADDR.addr;
@@ -1126,6 +1131,7 @@ always_comb begin
                         end
                         default: begin
                           reg_error_d                      = 1; 
+                          reg_rr_data_d                    = '0;
                         end
                     endcase
                 end

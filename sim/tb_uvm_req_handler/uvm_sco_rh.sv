@@ -45,6 +45,7 @@ class uvm_sco_rh extends uvm_component;
             end 
             if((tr.iopmp_permission_denied[j] == 1 && tr.mst_rsp_o[j].d_error == 1'b1 && tr.mst_rsp_o[j].d_sink == 8'hEE) || (tr.iopmp_permission_denied[j] == 1 && tr.mst_rsp_o[j].d_error == 1'b0 && tr.mst_rsp_o[j].d_sink == 8'hAA) || (tr.iopmp_permission_denied[j] == 0 && tr.mst_rsp_o[j].d_error == 1'b0)) begin 
                 `uvm_info("SCO", $sformatf("Req handler behaviour is correct -> tr.iopmp_permission_denied[%0h] == %0h && tr.mst_rsp_o[%0h].d_error == %0h && tr.mst_rsp_o[%0h].d_sink == %0h", j, tr.iopmp_permission_denied[j], j, tr.mst_rsp_o[j].d_error, j, tr.mst_rsp_o[j].d_sink), UVM_NONE);
+                `uvm_info("SCO", $sformatf("Sink ID EE is for the error response and AA is for the successful response."), UVM_NONE);
             end
             else begin                 
                 `uvm_error("SCO", $sformatf("Req handler behaviour is wrong -> tr.iopmp_permission_denied[%0h] == %0h && tr.mst_rsp_o[%0h].d_error == %0h && tr.mst_rsp_o[%0h].d_sink == %0h", j, tr.iopmp_permission_denied[j], j, tr.mst_rsp_o[j].d_error, j, tr.mst_rsp_o[j].d_sink));

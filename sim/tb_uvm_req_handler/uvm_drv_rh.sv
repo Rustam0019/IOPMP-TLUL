@@ -31,6 +31,7 @@ class uvm_drv_rh extends uvm_driver#(uvm_transaction_rh);
             vif.reset = 1;
             vif.tb_wr = 0;
             vif.tb_valid = 0;
+            vif.mst_req_i[0]                     <= '0;
             //vif.tb_rd = 0;
             #500ns;
             vif.reset = 0;
@@ -38,8 +39,8 @@ class uvm_drv_rh extends uvm_driver#(uvm_transaction_rh);
     endtask
 
     task automatic mst_send_req (input logic  [7:0]   mst_indx);
-        vif.mst_req_i[mst_indx].a_valid             <= 1'b0;
-        #150;
+        vif.mst_req_i[mst_indx]                     <= '0;
+        #225;
         vif.mst_req_i[mst_indx].a_param             <= tr.mst_param  [mst_indx];
         vif.mst_req_i[mst_indx].a_size              <= tr.mst_size   [mst_indx];
         vif.mst_req_i[mst_indx].a_source            <= tr.mst_source [mst_indx];
@@ -54,11 +55,13 @@ class uvm_drv_rh extends uvm_driver#(uvm_transaction_rh);
         #100;
         vif.mst_req_i[mst_indx].a_valid             <= 1'b0;
         #100;
-        `uvm_info("DRV", $sformatf("REQUEST SENT"), UVM_MEDIUM);
+        `uvm_info("DRV", $sformatf("Master %d REQUEST SENT ", mst_indx), UVM_MEDIUM);
     endtask;
     
 
     task automatic slv_send_resp (input logic  [7:0]   mst_indx_resp);
+        vif.slv_rsp_i[mst_indx_resp]                  <= '0;
+        #100;
         vif.slv_rsp_i[mst_indx_resp].d_param          <= tr.slv_param  [mst_indx_resp];
         vif.slv_rsp_i[mst_indx_resp].d_size           <= tr.slv_size   [mst_indx_resp];
         vif.slv_rsp_i[mst_indx_resp].d_source         <= vif.slv_req_o [mst_indx_resp].a_source;
@@ -69,7 +72,8 @@ class uvm_drv_rh extends uvm_driver#(uvm_transaction_rh);
         vif.slv_rsp_i[mst_indx_resp].a_ready          <= 1'b1;
         vif.slv_rsp_i[mst_indx_resp].d_data           <= tr.slv_data    [mst_indx_resp];
         #100;
-        vif.slv_rsp_i[mst_indx_resp].d_valid          <= 1'b0;
+        //vif.slv_rsp_i[mst_indx_resp].d_valid          <= 1'b0;
+        vif.slv_rsp_i[mst_indx_resp]                    <= '0;
         #200;
         // `uvm_info("DRV", $sformatf("DATA READ: %0h", vif.mst_req_i.a_data), UVM_MEDIUM);
     endtask;

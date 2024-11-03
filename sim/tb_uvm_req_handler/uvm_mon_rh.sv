@@ -31,25 +31,45 @@ class uvm_mon_rh extends uvm_monitor;
                 tr.reset = 1'b0;
                 `uvm_info("Monitor", "SYSTEM RESET", UVM_NONE)
                 send.write(tr);
-           end
+            end
 
             else begin
-                wait(vif.tb_valid == 1);
-                for (int j = 0; j < (rh_file_pkg::IOPMPNumChan); j++) begin
-                    //if(vif.mst_req_i[j].a_valid) begin
-                        tr.mst_address              [j]              = vif.mst_req_i[j].a_address;
-                        tr.mst_opcode               [j]              = vif.mst_req_i[j].a_opcode;
-                        tr.iopmp_check_addr_o       [j]              = vif.iopmp_check_addr_o[j];
-                        tr.iopmp_check_access_o     [j]              = vif.iopmp_check_access_o[j];
-                        tr.iopmp_permission_denied  [j]              = vif.iopmp_permission_denied[j];
-                    //end
-                end
-                
+                fork
+                    begin
+                        wait(vif.tb_valid == 1);
+                        for (int j = 0; j < (rh_file_pkg::IOPMPNumChan); j++) begin
+                            //if(vif.mst_req_i[j].a_valid) begin
+                                tr.mst_address              [j]              = vif.mst_req_i[j].a_address;
+                                tr.mst_opcode               [j]              = vif.mst_req_i[j].a_opcode;
+                                tr.iopmp_check_addr_o       [j]              = vif.iopmp_check_addr_o[j];
+                                tr.iopmp_check_access_o     [j]              = vif.iopmp_check_access_o[j];
+                                tr.iopmp_permission_denied  [j]              = vif.iopmp_permission_denied[j];
+                            //end
+                        end
+                    end
+                    begin
+                        // for (int j = 0; j < (rh_file_pkg::IOPMPNumChan); j++) begin
+                        //     //@(posedge vif.mst_rsp_o[j].d_valid);
+                        //     wait(vif.mst_rsp_o[j].d_valid == 1);
+                        //     `uvm_info("Monitor", "HERE 3", UVM_NONE)
+                        //     tr.mst_rsp_o                [j]              = vif.mst_rsp_o[j];
+                        // end      
+                        
+                        fork
+                            begin
+                                wait(vif.mst_rsp_o[0].d_valid == 1);
+                                tr.mst_rsp_o                [0]              = vif.mst_rsp_o[0];
+                            end
+                            begin
+                                wait(vif.mst_rsp_o[1].d_valid == 1);
+                                tr.mst_rsp_o                [1]              = vif.mst_rsp_o[1];
+                            end
+                        join
+                        // Add the same begin..end block with different index, if you increase the number of masters.
+                    end
+                join
                 wait(vif.tb_valid == 0);
-                for (int j = 0; j < (rh_file_pkg::IOPMPNumChan); j++) begin
-                        tr.mst_rsp_o                [j]              = vif.mst_rsp_o[j];
-                end
-                
+                `uvm_info("MON", $sformatf("DATA COLLECTED"), UVM_MEDIUM);
                 send.write(tr);
 
             end

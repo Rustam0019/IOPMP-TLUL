@@ -38,7 +38,7 @@ class uvm_transaction_cp extends uvm_sequence_item;
     //rand logic [31:16] rrid_transl; 
     rand logic [15:0]  prio_entry;
     constraint prio_entry_c {
-        prio_entry >= 2 &&  prio_entry <= 16'h4;       
+        prio_entry >= 0 && prio_entry < cp_file_pkg::IOPMPRegions - 1;       
     }
     
 
@@ -129,7 +129,7 @@ class uvm_transaction_cp extends uvm_sequence_item;
     foreach(entry_addr_addr[i]) {
         //entry_addr_addr[i] inside {32'h2000_0000, 32'h4000_0000, 32'h8000_0000};
         32'h2000_0000 <= entry_addr_addr[i] <= 32'h8000_0000;
-        if(entry_cfg_a[i] == IOPMP_MODE_TOR){
+        if(entry_cfg_a[i] == IOPMP_MODE_TOR && i != 0){
             entry_addr_addr[i - 1] < entry_addr_addr[i];
         }
         //(entry_addr_addr[i] >= 32'h2000_0000 ) && (entry_addr_addr[i] < (32'h9000_0000)); 

@@ -2,6 +2,7 @@ import top_pkg::*;
 import tlul_pkg::*;
 import config_pkg::*;
 import iopmp_pkg::*;
+import cp_file_pkg::*;
 
 interface intf_cp();
     

@@ -20,7 +20,7 @@ module uvm_top_rh;
     
     
 
-    always #50 clk <= ~clk; //1.50 20 nsec, 10nsec
+    always #50 clk <= ~clk; // 10 MHz
     assign vif.clk      = clk;
 
     

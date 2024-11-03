@@ -72,7 +72,8 @@ class uvm_mon_cp extends uvm_monitor;
                 wait(vif.tb_wr == 1'b1);
                 //wait(vif.tb_rd == 1'b1);
  
-                @(posedge vif.slv_rsp_o.d_valid);
+                //@(posedge vif.slv_rsp_o.d_valid);
+                wait(vif.slv_rsp_o.d_opcode == AccessAckData);
                 // @(negedge vif.mst_req_i.a_valid);
                 vif.tb_wr = 0;
                 vif.tb_rd = 0;

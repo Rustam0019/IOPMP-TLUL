@@ -34,7 +34,7 @@ package cp_file_pkg;
     localparam NUM_MASTERS            = 3;
        
     `include "uvm_transaction_cp.sv" 
-    `include "uvm_sequence_cp.sv"       
+    `include "uvm_sequence_cp.sv"        
                                                                                                                                 
     `include "uvm_drv_cp.sv"             
     `include "uvm_mon_cp.sv"          

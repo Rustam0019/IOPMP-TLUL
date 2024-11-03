@@ -116,7 +116,7 @@ class uvm_sco_cp extends uvm_component;
                     `uvm_info("SCO", $sformatf("MDCFGLCK DATA MATCHED-> ref_wr_data: %0b, reg_data: %0b", tr.ref_wr_data, tr.reg_data), UVM_NONE);
                 end
                 else begin                 
-                    `uvm_error("SCO", $sformatf("MDCFGLCK DATA MISMATCHED-> ref_wr_data: %0b, reg_data: %0b", tr.ref_wr_data, tr.reg_data));
+                    `uvm_error("SCO", $sformatf("MDCFGLCK DATA MISMATCHED-> ref_wr_data: %0h, reg_data: %0h", tr.ref_wr_data, tr.reg_data));
                 end 
             end
             ENTRYLCK_OFFSET: begin

@@ -70,14 +70,14 @@ logic [7:0][IOPMPRegions-1:0]       md_entry_indexes[IOPMPNumChan];
 for(genvar j = 0; j < IOPMPNumChan; j++) begin  
     always_comb begin
         counter[j]            = '0; 
-        last_entry_indx[j] = '0;
+        last_entry_indx[j]    = '0;
         md_entry_indexes[j]   = '0;
         rrid_md_list[j]       = '0;
-        unknown_rrid[j]   = 1'b1;
+        unknown_rrid[j]       = 1'b1;
         for(int i=0; i < IOPMPMemoryDomains; i++) begin 
             if(srcmd_en_table[j][i]) begin
                 rrid_md_list[j][counter[j]] = i[7:0];
-                unknown_rrid[j]          = 1'b0;
+                unknown_rrid[j]             = 1'b0;
                 counter[j] += 1;
             end
         end
