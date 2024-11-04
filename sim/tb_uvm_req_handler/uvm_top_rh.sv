@@ -34,7 +34,9 @@ module uvm_top_rh;
         .slv_rsp_i(vif.slv_rsp_i),
         .slv_req_o(vif.slv_req_o),
         .iopmp_permission_denied(vif.iopmp_permission_denied),
+        .entry_violated_index_i(vif.entry_violated_index_i),
         .ERR_CFG(vif.ERR_CFG),
+        .entry_conf(vif.entry_conf),
         .iopmp_check_addr_o(vif.iopmp_check_addr_o),
         .iopmp_check_access_o(vif.iopmp_check_access_o),
         .rrid(vif.rrid)

@@ -30,6 +30,7 @@ package rh_file_pkg;
     import iopmp_pkg::*; 
 
     localparam IOPMPNumChan           = 2;
+    localparam IOPMPRegions           = 4;
        
     `include "uvm_transaction_rh.sv" 
     `include "uvm_sequence_rh.sv"       

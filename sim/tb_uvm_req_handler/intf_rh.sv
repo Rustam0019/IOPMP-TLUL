@@ -14,7 +14,10 @@ interface intf_rh();
     tl_d2h_t                                slv_rsp_i[rh_file_pkg::IOPMPNumChan];
     tl_h2d_t                                slv_req_o[rh_file_pkg::IOPMPNumChan];
     logic                                   iopmp_permission_denied[rh_file_pkg::IOPMPNumChan];
+    logic [8:0]                             entry_violated_index_i[rh_file_pkg::IOPMPNumChan];
     iopmp_pkg::err_cfg                      ERR_CFG;
+    iopmp_pkg::entry_cfg                    entry_conf  [rh_file_pkg::IOPMPRegions];
+
     
     logic [33:0]                            iopmp_check_addr_o  [rh_file_pkg::IOPMPNumChan];
     iopmp_req_e                             iopmp_check_access_o[rh_file_pkg::IOPMPNumChan];

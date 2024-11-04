@@ -25,7 +25,8 @@ import iopmp_pkg::*;
 
 
 module iopmp_req_handler_tlul #(
-    parameter int unsigned IOPMPNumChan              =   2
+    parameter int unsigned IOPMPNumChan              =   2,
+    parameter int unsigned IOPMPRegions              =   4
 )(
     input   logic                           clk,
     input   logic                           rst,
@@ -34,15 +35,15 @@ module iopmp_req_handler_tlul #(
     
     input   tl_d2h_t                        slv_rsp_i[IOPMPNumChan],
     output  tl_h2d_t                        slv_req_o[IOPMPNumChan],
-    input logic                             iopmp_permission_denied[IOPMPNumChan],
-    input iopmp_pkg::err_cfg                ERR_CFG,
+    input   logic                           iopmp_permission_denied[IOPMPNumChan],
+    input   logic [8:0]                     entry_violated_index_i[IOPMPNumChan],
+    input   iopmp_pkg::err_cfg              ERR_CFG,
+    input   iopmp_pkg::entry_cfg            entry_conf  [IOPMPRegions],
     
-    output  logic [33:0]                     iopmp_check_addr_o  [IOPMPNumChan],
-    output  iopmp_req_e                      iopmp_check_access_o[IOPMPNumChan],
+    output  logic [33:0]                    iopmp_check_addr_o  [IOPMPNumChan],
+    output  iopmp_req_e                     iopmp_check_access_o[IOPMPNumChan],
     //output  logic                            iopmp_check_en_o[IOPMPNumChan],
-    output  logic [SourceWidth - 1 : 0 ]     rrid[IOPMPNumChan]
-    
-    // output error_reporting 
+    output  logic [SourceWidth - 1 : 0 ]    rrid[IOPMPNumChan]
 );
 
 
@@ -62,7 +63,6 @@ module iopmp_req_handler_tlul #(
     logic [SinkWidth - 1 : 0]            slv_sink  [IOPMPNumChan];
     logic                                slv_ready [IOPMPNumChan];
 
-    //logic                                slv_rsp_pending;
     tl_d2h_t                             err_tl_rsp[IOPMPNumChan];
     tl_d2h_t                             success_tl_rsp[IOPMPNumChan];
     // end
@@ -70,8 +70,6 @@ module iopmp_req_handler_tlul #(
     tl_h2d_t err_mst_req[IOPMPNumChan];
     // tl_d2h_t rsp_o[IOPMPNumChan];
 
-    //assign err_mst_req    = mst_req_i;
-    //assign rsp_o    = slv_rsp_o;
 
     assign rrid = mst_id;
 
@@ -100,7 +98,6 @@ module iopmp_req_handler_tlul #(
         always_ff @(posedge clk) begin
             if (rst) begin
                 current_state      <= IDLE;
-                //slv_rsp_pending    <= 0;
             end
             else begin
                 current_state <= next_state; 
@@ -117,12 +114,11 @@ module iopmp_req_handler_tlul #(
                         mst_rsp_o[j]    = slv_rsp_i[j];
                     end
                     err_mst_req [j] = '0;
-                    // slv_rsp_pending = 1'b0;
                     if(mst_valid[j]) begin
                         iopmp_check_addr[j]   = mst_addr[j];
-                        iopmp_check_access[j] = (mst_opcode[j] == PutFullData || mst_opcode[j] == PutPartialData) ? IOPMP_ACC_WRITE : IOPMP_ACC_READ; // ?????? 
+                        iopmp_check_access[j] = (mst_opcode[j] == PutFullData || mst_opcode[j] == PutPartialData) ? IOPMP_ACC_WRITE : IOPMP_ACC_READ;
                         // slv_ready[j] && removed from if
-                        if(!iopmp_permission_denied[j]) begin // how do we know when the result will be here????(consider mdcfg)
+                        if(!iopmp_permission_denied[j]) begin 
                             slv_req_o[j]    = mst_req_i[j];
                         end
                         else begin
@@ -135,10 +131,11 @@ module iopmp_req_handler_tlul #(
                     end              
                 end       
                 BLOCK: begin
-                        //if(iopmp_permission_denied[j]) begin 
-                            if(mst_ready[j]) begin // if response was already generated between err_rsp_gen and mst, do I need this?
-                                if(ERR_CFG.rre && success_tl_rsp[j].d_opcode == AccessAckData || (ERR_CFG.rwe && success_tl_rsp[j].d_opcode == AccessAck)) begin
-                                    mst_rsp_o[j] = success_tl_rsp[j]; //consider local access
+                            if(mst_ready[j]) begin 
+                                if(((ERR_CFG.rre || (entry_conf[entry_violated_index_i[j]].sere && entry_violated_index_i[j][8])) && success_tl_rsp[j].d_opcode == AccessAckData) 
+                                    || ((ERR_CFG.rwe || (entry_conf[entry_violated_index_i[j]].sewe && entry_violated_index_i[j][8])) && success_tl_rsp[j].d_opcode == AccessAck) 
+                                    ) begin
+                                    mst_rsp_o[j] = success_tl_rsp[j];
                                 end
                                 else begin
                                     mst_rsp_o[j] = err_tl_rsp[j];
@@ -160,7 +157,7 @@ module iopmp_req_handler_tlul #(
             .clk_i(clk),
             .rst_ni(!rst),
             .tl_h_i(err_mst_req[j]),
-            .tl_h_o(err_tl_rsp[j])); // new signal for this, forward it in IDLE, when denied
+            .tl_h_o(err_tl_rsp[j]));
         
         tlul_success_resp success_resp(
             .clk(clk),

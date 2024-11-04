@@ -49,6 +49,8 @@ class uvm_transaction_rh extends uvm_sequence_item;
     logic [33:0]                           iopmp_check_addr_o     [rh_file_pkg::IOPMPNumChan];
     iopmp_req_e                            iopmp_check_access_o   [rh_file_pkg::IOPMPNumChan];
     rand logic                             iopmp_permission_denied[rh_file_pkg::IOPMPNumChan];
+    rand logic [8:0]                       entry_violated_index_i[rh_file_pkg::IOPMPNumChan];
+    rand iopmp_pkg::entry_cfg              entry_conf            [rh_file_pkg::IOPMPRegions];
     rand iopmp_pkg::err_cfg                ERR_CFG;
 
     //logic [7:7]  err_cfg_rxe;       // Response on an illegal instruction fetch
@@ -59,7 +61,12 @@ class uvm_transaction_rh extends uvm_sequence_item;
     //rand logic [2:2]  err_cfg_ire;       // To trigger an interrupt on an illegal read access
     //logic [1:1]  err_cfg_ie;        // Enable the interrupt of the IOPMP
 
-
+    constraint  entry_violated_index_i_c{
+        foreach (entry_violated_index_i[i]) {
+            0 <= entry_violated_index_i[i][7:0] && entry_violated_index_i[i][7:0] <= rh_file_pkg::IOPMPRegions;       
+        }
+    }
+    
 
 
     // Outputs to compare

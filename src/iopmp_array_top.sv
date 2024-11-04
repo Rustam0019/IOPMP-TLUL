@@ -32,7 +32,7 @@ import iopmp_pkg::*;
 module iopmp_array_top #(
     parameter int unsigned IOPMPRegions          =   4,
     parameter int unsigned IOPMPNumChan          =   4,
-    parameter int unsigned IOPMPGranularity      =   1, // problem here, it affects TOR?????
+    parameter int unsigned IOPMPGranularity      =   1,
     parameter int unsigned IOPMPMemoryDomains    =   1
     //parameter int unsigned IOPMPPrioRegions      =   1
 )(
@@ -54,11 +54,14 @@ module iopmp_array_top #(
     input  logic [SourceWidth - 1 : 0]           iopmp_mst_id[IOPMPNumChan],
     
     // Error Report
-    output error_report_t                       iopmp_error_report[IOPMPNumChan] // it should be sequential!!!!!! 
-    
+    output logic [8:0]                          entry_violated_index_o[IOPMPNumChan],
+    output error_report_t                       iopmp_error_report[IOPMPNumChan]
 );
 
-logic [7:0]   entry_violated_index[IOPMPNumChan];
+
+assign entry_violated_index_o = entry_violated_index;
+
+logic [8:0]   entry_violated_index[IOPMPNumChan];
 logic[31:0]   counter[IOPMPNumChan];
 logic[7:0]    last_entry_indx[IOPMPNumChan];
 logic         unknown_rrid[IOPMPNumChan];
@@ -90,7 +93,7 @@ for(genvar j = 0; j < IOPMPNumChan; j++) begin
                     end
                 end
                 else begin
-                    //md_entry_indexes[j][i] = mdcfg_table[rrid_md_list[i] - 1]; // build array here all indexes!!!!!
+                    //md_entry_indexes[j][i] = mdcfg_table[rrid_md_list[i] - 1];
                     for(int k = mdcfg_table[rrid_md_list[j][i] - 1]; k < mdcfg_table[rrid_md_list[j][i]]; k++) begin
                         md_entry_indexes[j][last_entry_indx[j]] = k[7:0];
                         last_entry_indx[j]++;

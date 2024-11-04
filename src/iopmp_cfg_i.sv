@@ -28,7 +28,7 @@ module iopmp_cfg_i #(
     input  iopmp_pkg::iopmp_req_e    iopmp_req_type_i[IOPMPNumChan],
     output logic                     iopmp_req_err_o[IOPMPNumChan],
     input  logic[7:0]                last_indx[IOPMPNumChan],
-    output logic [7:0]               entry_violated_index[IOPMPNumChan]
+    output logic [8:0]               entry_violated_index[IOPMPNumChan]
 );
 
 
@@ -45,22 +45,22 @@ logic [IOPMPNumChan-1:0][IOPMPRegions-1:0]                                      
 
 
 // Access fault determination / prioritization
-function automatic logic access_fault_check   (input iopmp_pkg::iopmp_req_e             iopmp_req_type_i_n,
-                                               input logic [33:0]                       iopmp_req_addr_i_n,
-                                               input logic [7:0][IOPMPRegions - 1:0]    md_entry_indexes_table,
-                                               input logic [33:0]                       region_start_addr_n [IOPMPRegions],
-                                               input logic [33:IOPMPGranularity+2]      region_addr_mask_n  [IOPMPRegions],
-                                               input iopmp_pkg::entry_cfg               csr_iopmp_i_cfg_n  [IOPMPRegions],
-                                               input logic  [33:0]                      csr_iopmp_addr_i_n [IOPMPRegions],
-                                               input logic  [15:0]                      prio_entry_num,
-                                               output logic [IOPMPRegions-1:0]                           region_match_gt,
+function automatic logic access_fault_check   (input iopmp_pkg::iopmp_req_e                               iopmp_req_type_i_n,
+                                               input logic [33:0]                                         iopmp_req_addr_i_n,
+                                               input logic [7:0][IOPMPRegions - 1:0]                      md_entry_indexes_table,
+                                               input logic [33:0]                                         region_start_addr_n [IOPMPRegions],
+                                               input logic [33:IOPMPGranularity+2]                        region_addr_mask_n  [IOPMPRegions],
+                                               input iopmp_pkg::entry_cfg                                 csr_iopmp_i_cfg_n  [IOPMPRegions],
+                                               input logic  [33:0]                                        csr_iopmp_addr_i_n [IOPMPRegions],
+                                               input logic  [15:0]                                        prio_entry_num,
+                                               output logic [IOPMPRegions-1:0]                            region_match_gt,
                                                output logic [IOPMPRegions-1:0]                            region_match_lt,
                                                output logic [IOPMPRegions-1:0]                            region_match_eq,
                                                output logic [IOPMPRegions-1:0]                            region_match_all,
                                                output logic [IOPMPRegions-1:0]                            region_basic_perm_check,
                                                //output logic  [7:0]                      count_test_i,
                                                input  logic[7:0]                        last_index,
-                                               output logic [7:0]                       entry_violated_index_o
+                                               output logic [8:0]                       entry_violated_index_o
                                                );
 
 
@@ -80,7 +80,7 @@ function automatic logic access_fault_check   (input iopmp_pkg::iopmp_req_e     
     region_match_lt         = '0;
     region_match_all        = '0;
     region_basic_perm_check = '0;
-    entry_violated_index_o  = 0;
+    entry_violated_index_o  = '0;
     
     
     while(h < last_index) begin
@@ -122,8 +122,9 @@ function automatic logic access_fault_check   (input iopmp_pkg::iopmp_req_e     
             break;
         end 
         else if (region_match_all[h] && !region_basic_perm_check[h] && r < prio_entry_num) begin
-            access_fail            = 1;
-            entry_violated_index_o = h;
+            access_fail                 = 1;
+            entry_violated_index_o[7:0] = r;
+            entry_violated_index_o[8]   = 1'b1; // this bit is used to determine whether violated index is valid.
             //region_match_eq = '0;
             region_match_eq[h] = 1'b1;
             region_match_gt[h] = 1'b1;
@@ -135,7 +136,7 @@ function automatic logic access_fault_check   (input iopmp_pkg::iopmp_req_e     
         if(h == last_index - 1) begin
             access_fail            = 1;
         end
-        entry_violated_index_o = h;
+        //entry_violated_index_o = r;
         h++;
         //count_test_i = r;
         r = md_entry_indexes_table[h];

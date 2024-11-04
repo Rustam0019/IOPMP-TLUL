@@ -65,6 +65,7 @@ error_report_t                        iopmp_error_report[IOPMPNumChan];
 logic [33:0]                          iopmp_req_addr_i[IOPMPNumChan];
 iopmp_pkg::iopmp_req_e                iopmp_req_type_i[IOPMPNumChan];
 logic                                 iopmp_req_err_o[IOPMPNumChan];
+logic [8:0]                           entry_violated_index[IOPMPNumChan];
 
 tl_d2h_t                              slv_rsp_i[IOPMPNumChan]; // it should be an input, we assume it comes from a slave.
 tl_h2d_t                              slv_req_o[IOPMPNumChan]; // it should be an output
@@ -108,7 +109,8 @@ iopmp_control_port #(
 );
     
 iopmp_req_handler_tlul #(
-    .IOPMPNumChan(IOPMPNumChan)
+    .IOPMPNumChan(IOPMPNumChan),
+    .IOPMPRegions(IOPMPRegions)
 ) iopmp_req_handler_0(
     .clk(clk),
     .rst(rst),
@@ -118,7 +120,9 @@ iopmp_req_handler_tlul #(
     .slv_rsp_i(slv_rsp_i),
     .slv_req_o(slv_req_o),
     .iopmp_permission_denied(iopmp_req_err_o),
+    .entry_violated_index_i(entry_violated_index),
     .ERR_CFG(ERR_CFG),
+    .entry_conf_i(entry_conf),
     .iopmp_check_addr_o(iopmp_req_addr_i),
     .iopmp_check_access_o(iopmp_req_type_i),
     //.iopmp_check_en_o(),
@@ -150,6 +154,7 @@ iopmp_array_top #(
     .iopmp_req_type_i(iopmp_req_type_i),
     .iopmp_req_err_o(iopmp_req_err_o),
     .iopmp_mst_id(rrid),
+    .entry_violated_index_o(entry_violated_index),
     .iopmp_error_report(iopmp_error_report),
     .prio_entry_num(prio_entry_num)
 );   

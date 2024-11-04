@@ -86,7 +86,9 @@ class uvm_drv_rh extends uvm_driver#(uvm_transaction_rh);
         forever begin
             seq_item_port.get_next_item(tr);
             if (tr.op_tr == send_req) begin
-                vif.ERR_CFG = tr.ERR_CFG;
+                vif.ERR_CFG                = tr.ERR_CFG;
+                vif.entry_violated_index_i = tr.entry_violated_index_i;
+                vif.entry_conf             = tr.entry_conf;
                 fork
                     mst_send_req(0);
                     mst_send_req(1);

@@ -18,7 +18,7 @@ class uvm_sequence_rh extends uvm_sequence#(uvm_transaction_rh);
     //  Task: body
     //  This is the user-defined task where the main sequence code resides.
     virtual task body();
-        repeat(2)
+        repeat(6)
             begin 
                 `uvm_info("TR", $sformatf("TRANSACTION %0d", i), UVM_NONE);
                 i = i + 1;
