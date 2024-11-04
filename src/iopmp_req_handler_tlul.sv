@@ -132,8 +132,8 @@ module iopmp_req_handler_tlul #(
                 end       
                 BLOCK: begin
                             if(mst_ready[j]) begin 
-                                if(((ERR_CFG.rre || (entry_conf[entry_violated_index_i[j]].sere && entry_violated_index_i[j][8])) && success_tl_rsp[j].d_opcode == AccessAckData) 
-                                    || ((ERR_CFG.rwe || (entry_conf[entry_violated_index_i[j]].sewe && entry_violated_index_i[j][8])) && success_tl_rsp[j].d_opcode == AccessAck) 
+                                if(((ERR_CFG.rre || (entry_conf[entry_violated_index_i[j][7:0]].sere && entry_violated_index_i[j][8])) && success_tl_rsp[j].d_opcode == AccessAckData) 
+                                    || ((ERR_CFG.rwe || (entry_conf[entry_violated_index_i[j][7:0]].sewe && entry_violated_index_i[j][8])) && success_tl_rsp[j].d_opcode == AccessAck) 
                                     ) begin
                                     mst_rsp_o[j] = success_tl_rsp[j];
                                 end

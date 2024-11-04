@@ -74,19 +74,22 @@ tl_d2h_t                              err_tl[IOPMPNumChan];
 
 iopmp_pkg::err_reqinfo    ERR_REQINFO;
 iopmp_pkg::err_cfg        ERR_CFG;
+iopmp_pkg::err_reqid      ERR_REQID;
 
-logic irq_gen;
+logic                                irq_gen;
+logic [IOPMPNumChan - 1 : 0]         irq_lines;
 logic [SourceWidth - 1 : 0 ]         rrid[IOPMPNumChan];
 
 logic [15:0]                         prio_entry_num;
 
 // interrupt generate
 assign irq     = irq_gen;
-assign irq_gen = (ERR_CFG.ie && (ERR_REQINFO.ttype == read_access || ERR_REQINFO.ttype == write_access) && ERR_REQINFO.v) ? 1'b1 : 1'b0;
+assign irq_gen = (ERR_CFG.ie && ((ERR_REQINFO.ttype == read_access && !entry_conf[ERR_REQID.eid].sire) || (ERR_REQINFO.ttype == write_access && !entry_conf[ERR_REQID.eid].siwe)) && ERR_REQINFO.v) ? 1'b1 : 1'b0;
 
 
 assign ERR_REQINFO = error_reg_o.ERR_REQINFO;
 assign ERR_CFG     = error_reg_o.ERR_CFG;
+assign ERR_REQID   = error_reg_o.ERR_REQID;
 
 
 

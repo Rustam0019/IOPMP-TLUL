@@ -5,7 +5,9 @@ add wave -noupdate -expand -group REQUEST_HANDLER /uvm_top_rh/io_req_handler_tlu
 add wave -noupdate -expand -group REQUEST_HANDLER /uvm_top_rh/io_req_handler_tlul_0/slv_rsp_i
 add wave -noupdate -expand -group REQUEST_HANDLER /uvm_top_rh/io_req_handler_tlul_0/slv_req_o
 add wave -noupdate -expand -group REQUEST_HANDLER /uvm_top_rh/io_req_handler_tlul_0/iopmp_permission_denied
+add wave -noupdate -expand -group REQUEST_HANDLER /uvm_top_rh/io_req_handler_tlul_0/entry_violated_index_i
 add wave -noupdate -expand -group REQUEST_HANDLER /uvm_top_rh/io_req_handler_tlul_0/ERR_CFG
+add wave -noupdate -expand -group REQUEST_HANDLER /uvm_top_rh/io_req_handler_tlul_0/entry_conf
 add wave -noupdate -expand -group REQUEST_HANDLER /uvm_top_rh/io_req_handler_tlul_0/iopmp_check_addr_o
 add wave -noupdate -expand -group REQUEST_HANDLER /uvm_top_rh/io_req_handler_tlul_0/iopmp_check_access_o
 add wave -noupdate -expand -group REQUEST_HANDLER /uvm_top_rh/io_req_handler_tlul_0/rrid

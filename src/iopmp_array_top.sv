@@ -110,7 +110,7 @@ for(genvar j = 0; j < IOPMPNumChan; j++) begin
         assign iopmp_error_report[j].ERR_REQADDR           = iopmp_req_addr_i[j];
         assign iopmp_error_report[j].ERR_REQADDRH          = '0;
         assign iopmp_error_report[j].ERR_REQID.rrid        = iopmp_mst_id[j];
-        assign iopmp_error_report[j].ERR_REQID.eid         = entry_violated_index[j];  
+        assign iopmp_error_report[j].ERR_REQID.eid         = entry_violated_index[j][7:0];  
     end
     //end
      

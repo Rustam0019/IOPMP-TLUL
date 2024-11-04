@@ -22,6 +22,9 @@ The IOPMP is based on a SRCMD table, MD table and Entry table. Each SRCMD entry 
 
 The module monitors all transactions on the bus and checks if the initiating master has the necessary permission to access the requested memory region.
 
+![IOPMP Design](IOPMP_Design.svg)
+
+
 ---
 
 
@@ -55,7 +58,16 @@ This testbench is built using the Universal Verification Methodology (UVM) frame
 Similar to the control port testbench, this UVM testbench targets the IOPMP Request Handler module. Using the UVM framework, this testbench thoroughly verifies the behavior of the request handler by generating randomized requests from simulated bus masters. These requests are processed by the request handler, which either forwards or blocks them based on the access permissions set by the IOPMP. The UVM sequences are responsible for generating diverse traffic patterns, including different memory access types (read, write), and memory regions, to ensure the request handler performs as expected under a variety of conditions. Data is monitored and collected through an interface, and the results are compared in the scoreboard to verify the handler's functionality.
 
 
+## UVM Testbench Run
+First, navigate to the UVM testbench directory
+    ```
+    cd my_project/tb_uvm_req_handler.
+    ```
+ Then, run the TCL file
+    ```
+    source run.tcl.
+    ```
 
-
+New sequences can be added to the `uvm_sequence_rh.sv` file, where you can also configure the number of transactions. The `uvm_transaction_rh.sv` file defines the signals and specifies which of them should be randomized. `The Driver` class drives signals in the `vif` interface to send requests and receive responses. `The Monitor` class collects both reference and actual data, forwarding it to `the Scoreboard` class for comparison.
 
 
