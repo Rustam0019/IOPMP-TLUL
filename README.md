@@ -4,13 +4,14 @@
 ## Overview
 The **IOPMP** (I/O Protection Management Unit) is a hardware module designed to manage protection for memory regions from I/O devices. It ensures that only authorized bus masters can access certain regions of memory. This is especially important in SoC (System-on-Chip) environments where multiple masters and peripherals share the same bus.
 
-This project implements the IOPMP in **SystemVerilog**, simulating the functionality of a protection unit that can be configured to control access permissions to different memory regions based on master IDs.
+This project implements the **IOPMP** in SystemVerilog, a protection unit that can be configured to control access permissions to different memory regions based on master IDs.
 
 ### Key Features:
 - **Region-based Protection**: Configurable regions to allow or deny access.
 - **Master ID Filtering**: Protection based on Master IDs.
 - **Configurable Permissions**: Supports read, write permissions.
-- **Uses TileLink UL**.
+- Uses **TileLink UL** for communication.
+- **Model:** Full Model has been implemented.
 
 ---
 
@@ -18,6 +19,7 @@ This project implements the IOPMP in **SystemVerilog**, simulating the functiona
 The IOPMP is based on a SRCMD table, MD table and Entry table. Each SRCMD entry contains MDs associated with the RRID. Each MD contains the top index of entries which is included in that memory region. Each entry includes:
 - An address .
 - Permissions (Read/Write).
+- Address mode configuration such as OFF, NA4, NAPOT, TOR.
 - Interrupt suppressor configuration.
 
 The module monitors all transactions on the bus and checks if the initiating master has the necessary permission to access the requested memory region.
@@ -25,11 +27,11 @@ The module monitors all transactions on the bus and checks if the initiating mas
 ![IOPMP Design](IOPMP_Design.svg)
 
 
----
 
 
 
----
+
+
 
 ## Description of Modules
 
@@ -69,5 +71,9 @@ First, navigate to the UVM testbench directory
     ```
 
 New sequences can be added to the `uvm_sequence_rh.sv` file, where you can also configure the number of transactions. The `uvm_transaction_rh.sv` file defines the signals and specifies which of them should be randomized. `The Driver` class drives signals in the `vif` interface to send requests and receive responses. `The Monitor` class collects both reference and actual data, forwarding it to `the Scoreboard` class for comparison.
+
+
+## IOPMP Specification
+This project is based on version 0.9.0 of the [IOPMP Specification](https://github.com/riscv-non-isa/iopmp-spec).
 
 
